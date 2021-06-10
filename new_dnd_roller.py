@@ -17,7 +17,6 @@ rgx = r"(\d+)d(\d+)\s*([+|-]\s*\d*)?"
 pattern = re.compile(rgx)
 def string_to_roll(strint):
 	m = pattern.match(strint)
-	print(m.groups())
 	nums =  [0 if g==None else int(g) for g in m.groups()]
 	return tuple(nums)
 
@@ -25,9 +24,6 @@ class Attack():
 	def __init__(self, to_hit_bonus, damage_on_hit, name='', elven_acc=False, repeated=1):
 		self.hit_bonus = to_hit_bonus
 		self.repeated = repeated
-
-		#self.on_hit_n, self.on_hit_die = damage_on_hit.split('d')
-		#self.on_hit_n, self.on_hit_die = int(self.on_hit_n), int(self.on_hit_die)
 
 		dice_nums = string_to_roll(damage_on_hit)
 		self.on_hit_n, self.on_hit_die, self.on_hit_flat = dice_nums
@@ -44,7 +40,7 @@ class Attack():
 			return
 		self.adv = True
 
-	def give_adv(self):
+	def give_dis(self):
 		if self.adv:
 			self.adv = False
 			return
@@ -55,7 +51,7 @@ class Attack():
 		rolls = [random.randint(1,20) + self.hit_bonus for r in range(n_rolls)]
 		roll = rolls[0]
 		if self.adv ^ self.dis:
-			roll = max(rolls) if adv else min(rolls)
+			roll = max(rolls) if self.adv else min(rolls)
 
 		dmg = sum([random.randint(1, self.on_hit_die) + self.on_hit_flat for n in range(self.on_hit_n)])
 		dmg *= self.repeated
@@ -77,8 +73,10 @@ def roll_attacks(attacks, ac):
 
 
 attacks = [
-	Attack(5, '4d8+27', name='test', repeated=7),
+	Attack(10, '1d10+5', name='eblast', elven_acc=True, repeated=6 ),
 ]
+
+attacks[0].give_adv()
 
 def generate_pools(attacks, num):
 	acc = {}
