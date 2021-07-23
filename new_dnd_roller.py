@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from Characters import characters
+from attack import Attack
 
 attacks1 = [
 	Attack(10, '1d10+8', name='eblast',  repeated=4 ),
@@ -54,20 +55,4 @@ def graph_compare(df_list, name_list=None):
 	plt.show()
 
 if __name__ == '__main__':
-	pools1 = generate_pools(attacks1, EPOCH)
-	pools2 = generate_pools(attacks2, EPOCH)
 	linspace = list(range(18, 28))
-	df1 = pandas.DataFrame(columns=[attack.name for attack in attacks1], index=linspace)
-	df2 = pandas.DataFrame(columns=[attack.name for attack in attacks2], index=linspace)
-	for ac in linspace:
-		for attack in attacks1:
-			acc = 0
-			p = pools1[attack.name]
-			df1[attack.name][ac] = mean(ac, p)
-		for attack in attacks2:
-			acc = 0
-			p = pools2[attack.name]
-			df2[attack.name][ac] = mean(ac, p)
-	graph_damage_by_attack(df1)
-	graph_rounds_to_kill(df1, characters)
-	#graph_compare([df1, df2], name_list=['lvl 18 blaster', 'whatever bullshit frantal made'])
