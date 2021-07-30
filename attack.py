@@ -14,7 +14,7 @@ class Attack():
 		self.hit_bonus = to_hit_bonus
 		self.repeated = repeated
 
-		dice_nums = string_to_roll(damage_on_hit)
+		dice_nums = util.string_to_roll(damage_on_hit)
 		self.on_hit_n, self.on_hit_die, self.on_hit_flat = dice_nums
 
 		self.adv = False

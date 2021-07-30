@@ -1,14 +1,14 @@
 import attack
-from enum import Enum
+from enum import Enum, auto
 
 class Stat(Enum):
-	STR = enum.auto()
-	DEX = enum.auto()
-	CON = enum.auto()
-	INT = enum.auto()
-	WIS = enum.auto()
-	CHA = enum.auto()
-	AC = enum.auto()
+	STR = auto()
+	DEX = auto()
+	CON = auto()
+	INT = auto()
+	WIS = auto()
+	CHA = auto()
+	AC = auto()
 
 class Character():
 	#TODO separate the character into two comonents: Stat block and attacks?
@@ -52,6 +52,9 @@ class Character():
 		acc += util.bonus_from_attribute(self.stat_block[attr])
 		return acc
 
+	def register_attack(self, attack):
+		self._attacks.append(attack)
+
 characters = [
 	Character('Amon', 135, 23),
 	Character('Giaus', 94, 20),
@@ -61,4 +64,3 @@ characters = [
 ]
 
 Giaus = characters[1]
-Giaus.register_attack(Attack())
