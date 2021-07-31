@@ -13,6 +13,9 @@ def calc_attack_at_ac(attack, effective_ac):
 class Attack():
 	def __init__(self, to_hit_bonus, damage_on_hit, challenge=Stat.AC, name='', repeated=1, save=True):
 		self.hit_bonus = to_hit_bonus
+		self.DC=0
+		if challenge != Stat.AC:
+			self.DC = to_hit_bonus
 		self.repeated = repeated
 
 		self.challenge_attribute = challenge

@@ -2,6 +2,7 @@ import attack
 from Stat import Stat
 import pandas as pd
 import random
+import util
 
 class Character():
 	#TODO separate the character into two comonents: Stat block and attacks?
@@ -13,12 +14,8 @@ class Character():
 		self.hp = hp
 		self.ac = ac
 		# TODO
-		self.str = 0
-		self.dex = 0
-		self.con = 0
-		self.int = 0
-		self.wis = 0
-		self.cha = 0
+		stat_block = [(s, 10) for s in list(Stat)]
+		self.stat_block = dict(stat_block)
 		self.crit_min = min(20, crit_min)
 		self.elven_acc = elven_acc
 
@@ -36,6 +33,9 @@ class Character():
 				a._adv_hit_func = prob_hit_elven
 				a.update()
 
+	def set_stat(self, stat_type, value):
+		self.stat_block[stat_type] = value
+
 	def get_attacks(self):
 		return self._attacks.copy()
 
@@ -52,11 +52,14 @@ class Character():
 
 	def generate_df(self, linspace, targets=None):
 		if not targets:
-			targets = [ Character('dummy_'+str(i) , random.randint(1,100), i) for i in linspace ]
+			targets = [ Character('dummy_'+str(i) , random.randint(1,100), 10) for i in linspace ]
+			for i in range(len(targets)):
+				targets[i].set_stat(Stat.DEX, 2*i)
+				print(targets[i].stat_block[Stat.DEX])
 		df = pd.DataFrame(columns=[attack.name for attack in self._attacks], index=linspace)
 		for target in targets:
 			for a in self._attacks:
-				df[a.name][target.ac] = a.calc_dmg(target)
+				df[a.name][target.get_bonus(Stat.DEX)] = a.calc_dmg(target)
 		return df
 
 
