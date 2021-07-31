@@ -55,4 +55,5 @@ def graph_compare(df_list, name_list=None):
 	plt.show()
 
 if __name__ == '__main__':
-	linspace = list(range(18, 28))
+	amon = characters[0]
+	amon.set_attacks(attacks1)

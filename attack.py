@@ -1,5 +1,6 @@
 import re
 import util
+from Stat import Stat
 
 def calc_attack_at_ac(attack, effective_ac):
 	acc = 0
@@ -10,9 +11,12 @@ def calc_attack_at_ac(attack, effective_ac):
 	return acc
 
 class Attack():
-	def __init__(self, to_hit_bonus, damage_on_hit, name='', repeated=1):
+	def __init__(self, to_hit_bonus, damage_on_hit, challenge=Stat.AC, name='', repeated=1, save=True):
 		self.hit_bonus = to_hit_bonus
 		self.repeated = repeated
+
+		self.challenge_attribute = challenge
+		self.challenge_save = save
 
 		dice_nums = util.string_to_roll(damage_on_hit)
 		self.on_hit_n, self.on_hit_die, self.on_hit_flat = dice_nums
@@ -60,5 +64,5 @@ class Attack():
 			# Natural 20
 			acc += 2*(util.get_avg_roll(self.on_hit_n, self.on_hit_die)) + self.on_hit_flat
 		else:
-			acc += calc_dmg() * (self.DC - target.get_bonus(self.challenge_attribute))/20
+			acc += calc_dmg() * (self.DC - target.get_bonus(self.challenge_attribute, self.challenge_save))/20
 		return acc

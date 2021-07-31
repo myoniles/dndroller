@@ -19,7 +19,7 @@ def prob_hit_adv(n):
 
 def prob_hit_dis(n):
 	assert(n <= 20)
-	return
+	return prob_hit_adv(-1 * n + 21)
 
 def prob_hit_elven(n):
 	assert(n <= 20)
