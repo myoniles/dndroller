@@ -1,10 +1,12 @@
 import attack
 from Stat import Stat
+import pandas as pd
+import random
 
 class Character():
 	#TODO separate the character into two comonents: Stat block and attacks?
 
-	def __init__(self,name, hp, ac, level=1):
+	def __init__(self,name, hp, ac, level=1, elven_acc=False, crit_min = 20):
 		self.name = name
 		self.prof_bonus = 0
 		self.prof= {} # Holds str of skills profficient in
@@ -17,6 +19,8 @@ class Character():
 		self.int = 0
 		self.wis = 0
 		self.cha = 0
+		self.crit_min = min(20, crit_min)
+		self.elven_acc = elven_acc
 
 		self._attacks = []
 
@@ -46,7 +50,14 @@ class Character():
 	def register_attack(self, attack):
 		self._attacks.append(attack)
 
-	def generate_dataframe(self):
+	def generate_df(self, linspace, targets=None):
+		if not targets:
+			targets = [ Character('dummy_'+str(i) , random.randint(1,100), i) for i in linspace ]
+		df = pd.DataFrame(columns=[attack.name for attack in self._attacks], index=linspace)
+		for target in targets:
+			for a in self._attacks:
+				df[a.name][target.ac] = a.calc_dmg(target)
+		return df
 
 
 characters = [

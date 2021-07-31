@@ -3,9 +3,12 @@ from Characters import characters
 from attack import Attack
 
 attacks1 = [
-	Attack(10, '1d10+8', name='eblast',  repeated=4 ),
-	Attack(10, '1d10+8', name='eblast_bonus_action',  repeated=4 ),
-	Attack(10, '1d10+8', name='eblast_surge',  repeated=4 ),
+	Attack(1, '1d4+1', name='eblast1',  repeated=1 ),
+	Attack(1, '2d4+1', name='eblast',  repeated=1 ),
+	Attack(1, '3d4+1', name='eblast10',  repeated=1 ),
+	Attack(1, '4d4+1', name='eblast12',  repeated=1 ),
+#	Attack(10, '1d10+8', name='eblast_bonus_action',  repeated=4 ),
+#	Attack(10, '1d10+8', name='eblast_surge',  repeated=4 ),
 ]
 attacks2 = [
 	Attack(15, '3d8+27', name='whatever busted shit fran made', repeated=4 ),
@@ -57,3 +60,7 @@ def graph_compare(df_list, name_list=None):
 if __name__ == '__main__':
 	amon = characters[0]
 	amon.set_attacks(attacks1)
+	df = amon.generate_df(list(range(0,23)))
+	print(df)
+
+	graph_damage_by_attack(df)

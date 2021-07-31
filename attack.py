@@ -4,7 +4,7 @@ from Stat import Stat
 
 def calc_attack_at_ac(attack, effective_ac):
 	acc = 0
-	hit_func = prob_hit_n
+	hit_func = util.prob_hit_n
 
 	acc += sum([ hit_func(n) * attack.exp_dmg for n in range(effective_hit, 20)])
 	acc += attack.crit_dmg()
@@ -28,7 +28,7 @@ class Attack():
 		self.name = name
 
 	def update(self):
-		self.hit_func = prob_hit_n
+		self.hit_func = util.prob_hit_n
 		if self.adv and self.dis:
 			self.adv, self.dis = (False, False)
 		if self.adv and not self.dis:
@@ -48,7 +48,7 @@ class Attack():
 			return
 		self.dis = True
 
-	def calc_dmg(self):
+	def _calc_dmg(self):
 		#this is just a wrapper
 		# It calculates damage regardless of AC or challenge
 		# Use this in conjunction with prob_hit to determine damage against a specific AC
@@ -59,10 +59,11 @@ class Attack():
 		self.update()
 		acc = 0
 		if self.challenge_attribute == Stat.AC:
-			effective_challege = challenge - self.hit_bonus
-			acc += sum([ calc_dmg() * self.hit_func(effective_challenge) for n in range(challenge, 20)])
+			effective_challenge = max(target.ac - self.hit_bonus, 0)
+			acc += sum([ self._calc_dmg() * self.hit_func(n) for n in range(effective_challenge+1, 20)])
 			# Natural 20
-			acc += 2*(util.get_avg_roll(self.on_hit_n, self.on_hit_die)) + self.on_hit_flat
+			if target.ac < 20 + self.hit_bonus:
+				acc += self.hit_func(20) * (2*(util.get_avg_roll(self.on_hit_n, self.on_hit_die)) + self.on_hit_flat)
 		else:
-			acc += calc_dmg() * (self.DC - target.get_bonus(self.challenge_attribute, self.challenge_save))/20
+			acc += self._calc_dmg() * (self.DC - target.get_bonus(self.challenge_attribute, self.challenge_save))/20
 		return acc
