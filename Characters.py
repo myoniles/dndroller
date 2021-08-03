@@ -70,5 +70,3 @@ characters = [
 	Character('Shvari', 126, 18),
 	Character('Solin', 132, 22)
 ]
-
-Giaus = characters[1]
