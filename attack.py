@@ -29,6 +29,7 @@ class Move():
 		return util.get_avg_roll(self.on_hit_n, self.on_hit_die) + self.on_hit_flat
 
 	def calc_dmg(self, target):
+		# override in children
 		assert(False)
 
 class Attack(Move):
@@ -65,11 +66,11 @@ class Attack(Move):
 		self.update()
 		acc = 0
 
-		effective_challenge = max(target.ac - self.hit_bonus, 0)
+		effective_challenge = max(target.stat_block[Stat.AC] - self.hit_bonus, 0)
 		acc += sum([ self._calc_dmg() * self.hit_func(n) for n in range(effective_challenge+1, 20)])
 
 		# Natural 20
-		if target.ac < 20 + self.hit_bonus:
+		if target.stat_block[Stat.AC] < 20 + self.hit_bonus:
 			acc += self.hit_func(20) * (2*(util.get_avg_roll(self.on_hit_n, self.on_hit_die)) + self.on_hit_flat)
 		return acc
 

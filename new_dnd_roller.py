@@ -5,8 +5,7 @@ from Stat import Stat
 
 attacks1 = [
 	Save(Stat.DEX, 10, '8d6', name='fireball'),
-	Attack(1, '1d4+1', name='eblast1',  repeated=1 ),
-#	Attack(1, '2d4+1', name='eblast',  repeated=1 ),
+	Attack(1, '1d8+1', name='eblast1',  repeated=1 ),
 #	Attack(1, '3d4+1', name='eblast10',  repeated=1 ),
 #	Attack(1, '4d4+1', name='eblast12',  repeated=1 ),
 #	Attack(10, '1d10+8', name='eblast_bonus_action',  repeated=4 ),
@@ -62,7 +61,5 @@ def graph_compare(df_list, name_list=None):
 if __name__ == '__main__':
 	amon = characters[0]
 	amon.set_attacks(attacks1)
-	df = amon.generate_df(list(range(-5,6)))
-	print(df)
-
+	df = amon.evaluate_over(Stat.DEX)
 	graph_damage_by_attack(df)

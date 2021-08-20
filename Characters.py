@@ -6,13 +6,17 @@ import util
 
 class Character():
 	#TODO separate the character into two comonents: Stat block and attacks?
+	# Nah I think its better if attacks act as a list of components.
+	# Don't complicate the code base too much
 
-	def __init__(self,name, hp, ac, level=1, elven_acc=False, crit_min = 20):
+	# Then Again I have more or less done that already
+	# If a class is data and its associated functionality, why do I want to have just the data elsewhere?
+
+	def __init__(self,name, hp, level=1, elven_acc=False, crit_min = 20):
 		self.name = name
 		self.prof_bonus = 0
 		self.prof= {} # Holds str of skills profficient in
 		self.hp = hp
-		self.ac = ac
 		# TODO
 		stat_block = [(s, 10) for s in list(Stat)]
 		self.stat_block = dict(stat_block)
@@ -39,7 +43,6 @@ class Character():
 	def get_attacks(self):
 		return self._attacks.copy()
 
-
 	def get_bonus(self, attr, save=True):
 		acc = 0
 		if save and attr in self.prof:
@@ -50,23 +53,25 @@ class Character():
 	def register_attack(self, attack):
 		self._attacks.append(attack)
 
-	def generate_df(self, linspace, targets=None):
-		if not targets:
-			targets = [ Character('dummy_'+str(i) , random.randint(1,100), 10) for i in linspace ]
-			for i in range(len(targets)):
-				targets[i].set_stat(Stat.DEX, 2*i)
-				print(targets[i].stat_block[Stat.DEX])
+	def evaluate_over(self, stat, linspace=list(range(0,21,2))):
+		# Generate one dummy then update throughout
+		# even with garbage collector it is cleaner
+		dummy_stat = dict([(s, 10) for s in list(Stat)])
+		dummy = Character('dummy', float('inf'))
+		dummy.stat_block = dummy_stat
 		df = pd.DataFrame(columns=[attack.name for attack in self._attacks], index=linspace)
-		for target in targets:
+		for challenge in linspace:
+			dummy_stat[stat] = challenge
+			# no need to update dummy because it already has the reference to the list
 			for a in self._attacks:
-				df[a.name][target.get_bonus(Stat.DEX)] = a.calc_dmg(target)
+				df[a.name][challenge] = a.calc_dmg(dummy)
 		return df
 
 
 characters = [
-	Character('Amon', 135, 23),
-	Character('Giaus', 94, 20),
-	Character('Knack', 157, 20),
-	Character('Shvari', 126, 18),
-	Character('Solin', 132, 22)
+	Character('Amon', 135),
+	Character('Giaus', 94),
+	Character('Knack', 157),
+	Character('Shvari', 126),
+	Character('Solin', 132)
 ]
