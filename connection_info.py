@@ -1,0 +1,4 @@
+MyPassword = ""
+MyUser = ""
+MyHost = ""
+MyDatabase = ""
